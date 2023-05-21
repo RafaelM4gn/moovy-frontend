@@ -1,13 +1,15 @@
-import { createContext, useState } from "react";
+import { createContext, useState, ReactNode, useContext } from "react";
 
-export const AuthContext = createContext({
-  token: "",
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setToken: (token: string) => {},
-});
+type AuthContextType = {
+  token: string;
+  setToken: (value: string) => void;
+};
+
+// iniciando o contexto com um objeto vazio
+export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 // Provedor do contexto de autenticação
-export const AuthProvider = ({ children }: { children: JSX.Element }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState("No token");
 
   return (
