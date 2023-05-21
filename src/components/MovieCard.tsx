@@ -7,8 +7,8 @@ import {
   Typography,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
-import { removeMovie } from "../api/api";
-import { useContext } from "react";
+import { addMovie } from "../api/api";
+import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
 export default function MovieCard({
@@ -24,10 +24,32 @@ export default function MovieCard({
   };
   handleDelete: (imdbID: string) => Promise<void>;
 }) {
+
+  //state of userHasMovie
+  const [userHasMovie, setUserHasMovie] = useState(movie.userHasMovie);
   const { token } = useContext(AuthContext);
 
   const onClickDelete = () => {
     handleDelete(movie.imdbID);
+    setUserHasMovie(false);
+  };
+
+  //save movie without userHasMovie
+  const movieWithoutUserHasMovie = {
+    imdbID: movie.imdbID,
+    title: movie.title,
+    poster: movie.poster,
+    imdbRating: movie.imdbRating,
+  };
+
+
+  const handleAdd = async () => {
+    try {
+      await addMovie(token, movieWithoutUserHasMovie);
+      setUserHasMovie(true);
+    } catch (error) {
+      console.error("error", error);
+    }
   };
 
 
@@ -63,7 +85,7 @@ export default function MovieCard({
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        {movie.userHasMovie ? (
+        {userHasMovie ? (
           <Button
             onClick={onClickDelete}
             variant="contained"
@@ -73,7 +95,12 @@ export default function MovieCard({
             Remove
           </Button>
         ) : (
-          <Button variant="contained" color="success" fullWidth>
+          <Button
+            onClick={handleAdd}
+            variant="contained"
+            color="success"
+            fullWidth
+          >
             {" "}
             Add to my library{" "}
           </Button>

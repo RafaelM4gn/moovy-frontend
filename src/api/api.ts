@@ -39,3 +39,21 @@ export async function removeMovie(token: string, imdbID: string) {
   });
   return response.data;
 }
+
+export async function addMovie(
+  token: string,
+  movie: {
+    imdbID: string;
+    title: string;
+    poster: string;
+    imdbRating: number;
+  }
+) {
+  const response = await axios.post("/movies", movie, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  
+  return response.data;
+}

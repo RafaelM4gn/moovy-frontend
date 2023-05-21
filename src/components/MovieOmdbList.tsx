@@ -25,7 +25,7 @@ export default function MovieOmdbList({
       }}
     >
       {movies.map((movie) => (
-        <Grid item xs={4}>
+        <Grid item xs={4} key={movie.imdbID}>
           <MovieCard movie={movie} handleDelete={handleDelete}/>
         </Grid>
       ))}

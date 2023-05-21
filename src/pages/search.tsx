@@ -2,9 +2,8 @@ import MovieOmdbList from "../components/MovieOmdbList";
 import { Paper, InputBase } from "@mui/material";
 import MainLayout from "../components/MainLayout";
 import { useState, useEffect, useRef, useContext } from "react";
-import { searchMovie } from "../api/api";
+import { removeMovie, searchMovie } from "../api/api";
 import {
-  catchError,
   debounceTime,
   distinctUntilChanged,
   startWith,
@@ -23,40 +22,7 @@ type Movie = {
 };
 
 function Search() {
-  const moviesPlaceHolder = [
-    {
-      imdbID: "tt0372784",
-      title: "Batman Begins",
-      poster:
-        "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
-      imdbRating: 8.2,
-      userHasMovie: true,
-    },
-    {
-      imdbID: "tt0468569",
-      title: "The Dark Knight",
-      poster:
-        "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
-      imdbRating: 9.0,
-      userHasMovie: false,
-    },
-    {
-      imdbID: "tt1345836",
-      title: "The Dark Knight Rises",
-      poster:
-        "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
-      imdbRating: 8.4,
-      userHasMovie: false,
-    },
-    {
-      imdbID: "tt0372784",
-      title: "Batman Begins",
-      poster:
-        "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
-      imdbRating: 8.2,
-      userHasMovie: true,
-    },
-  ];
+  const moviesPlaceHolder: Movie[] = [];
 
   const [movies, setMovies] = useState<Movie[]>(moviesPlaceHolder);
 
@@ -88,6 +54,14 @@ function Search() {
     return () => subscription.unsubscribe();
   }, []);
 
+  const handleDelete = async (imdbID: string) => {
+    try {
+      await removeMovie(token, imdbID);
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
+
   return (
     <MainLayout>
       <>
@@ -111,7 +85,7 @@ function Search() {
           />
           <SearchIcon />
         </Paper>
-       <MovieOmdbList movies={movies} />
+        <MovieOmdbList handleDelete={handleDelete} movies={movies} />
       </>
     </MainLayout>
   );
