@@ -2,7 +2,7 @@ import MovieOmdbList from "../components/MovieOmdbList";
 import { Paper, InputBase } from "@mui/material";
 import MainLayout from "../components/MainLayout";
 import { useState, useEffect, useRef, useContext } from "react";
-import { searchMovie } from "../api/auth";
+import { searchMovie } from "../api/api";
 import {
   catchError,
   debounceTime,

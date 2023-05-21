@@ -3,7 +3,7 @@ import { useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import MainLayout from "../components/MainLayout";
 import { useState } from "react";
-import { login } from "../api/auth";
+import { login } from "../api/api";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
