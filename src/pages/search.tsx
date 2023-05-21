@@ -34,13 +34,13 @@ function Search() {
   useEffect(() => {
     if (!searchInputRef.current) return;
 
-    const search$ = fromEvent(searchInputRef.current, "input").pipe(
+    const search$ = fromEvent<InputEvent>(searchInputRef.current, "input").pipe(
       debounceTime(500),
       distinctUntilChanged(),
       startWith({ target: { value: "" } }),
       switchMap((event) => {
-        const searchTerm = event.target.value;
-
+        const searchTerm =
+          event.target instanceof HTMLInputElement ? event.target.value : "";
         if (searchTerm.length < 3) {
           return of(moviesPlaceHolder);
         } else {
