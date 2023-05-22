@@ -6,10 +6,8 @@ import MovieOmdbList from "../components/MovieOmdbList";
 import PrivatePage from "../components/PrivatePage";
 
 function MyLibrary() {
-  //get token updated token from context
   const { token } = useContext(AuthContext);
 
-  //get my library
   const [myLibrary, setMyLibrary] = useState<
     {
       imdbID: string;

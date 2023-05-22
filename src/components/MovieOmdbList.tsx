@@ -31,7 +31,7 @@ export default function MovieOmdbList({
         <Grid item xs={4} key={movie.imdbID}>
           <MovieCard
             movie={movie}
-            starRate={starRate}
+            allowRating={starRate}
             handleDelete={handleDelete}
           />
         </Grid>

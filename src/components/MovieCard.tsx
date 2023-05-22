@@ -17,7 +17,7 @@ import ConfirmAlert from "./ConfirmAlert";
 export default function MovieCard({
   movie,
   handleDelete,
-  starRate,
+  allowRating,
 }: {
   movie: {
     imdbID: string;
@@ -28,17 +28,15 @@ export default function MovieCard({
     userRating: number | null;
   };
   handleDelete: (imdbID: string) => Promise<void>;
-  starRate: boolean;
+  allowRating: boolean;
 }) {
   //state of userHasMovie
-  const [userHasMovie, setUserHasMovie] = useState(movie.userHasMovie);
+  const [isMovieInUserLibrary, setIsMovieInUserLibrary] = useState(movie.userHasMovie);
   const { token } = useContext(AuthContext);
-  const [open, setOpen] = useState(false);
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
 
-  const onClickDelete = () => {
-    setOpen(true);
-    // handleDelete(movie.imdbID);
-    // setUserHasMovie(false);
+  const onClickOpenConfirmAlert = () => {
+    setShowConfirmAlert(true);
   };
 
   //save movie without userHasMovie
@@ -52,21 +50,20 @@ export default function MovieCard({
   const handleAdd = async () => {
     try {
       await addMovie(token, movieWithoutUserHasMovie);
-      setUserHasMovie(true);
+      setIsMovieInUserLibrary(true);
     } catch (error) {
       console.error("error", error);
     }
   };
 
-  //make a function thar make onAgreeProps to handleDelete
-  const handleAgree = () => {
+  const handleConfirmDelete = () => {
     handleDelete(movie.imdbID);
-    setUserHasMovie(false);
-    setOpen(false);
+    setIsMovieInUserLibrary(false);
+    setShowConfirmAlert(false);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setShowConfirmAlert(false);
   };
 
   return (
@@ -109,13 +106,13 @@ export default function MovieCard({
         }}
         disableSpacing
       >
-        {userHasMovie && starRate && (
+        {isMovieInUserLibrary && allowRating && (
           <StarRating userRating={movie.userRating} imdbID={movie.imdbID} />
         )}
-        {userHasMovie ? (
+        {isMovieInUserLibrary ? (
           <Button
-            fullWidth={!starRate}
-            onClick={onClickDelete}
+            fullWidth={!allowRating}
+            onClick={onClickOpenConfirmAlert}
             endIcon={<DeleteIcon />}
             variant="contained"
             color="error"
@@ -135,9 +132,9 @@ export default function MovieCard({
         )}
       </CardActions>
       <ConfirmAlert
-        openProps={open}
+        openProps={showConfirmAlert}
         onCloseProps={handleClose}
-        onAgreeProps={handleAgree}
+        onAgreeProps={handleConfirmDelete}
       />
     </Card>
   );
