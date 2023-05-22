@@ -18,6 +18,7 @@ type Movie = {
   title: string;
   poster: string;
   imdbRating: number;
+  userRating: number | null;
   userHasMovie: boolean;
 };
 

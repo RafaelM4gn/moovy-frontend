@@ -10,6 +10,7 @@ export default function MovieOmdbList({
     title: string;
     poster: string;
     imdbRating: number;
+    userRating: number | null;
     userHasMovie: boolean;
   }[];
   handleDelete: (imdbID: string) => Promise<void>;

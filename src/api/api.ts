@@ -57,3 +57,19 @@ export async function addMovie(
   
   return response.data;
 }
+
+export async function reviewMovie(
+  token: string,
+  imdbID: string,
+  review: number
+) {
+  const response = await axios.put(
+    `/movies/review?imdbID=${imdbID}&review=${review}`,
+    null,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+}

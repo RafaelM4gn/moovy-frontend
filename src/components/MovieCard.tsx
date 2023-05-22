@@ -10,6 +10,8 @@ import StarIcon from "@mui/icons-material/Star";
 import { addMovie } from "../api/api";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import StarRating from "./StarRating";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function MovieCard({
   movie,
@@ -21,10 +23,10 @@ export default function MovieCard({
     poster: string;
     imdbRating: number;
     userHasMovie: boolean;
+    userRating: number | null;
   };
   handleDelete: (imdbID: string) => Promise<void>;
 }) {
-
   //state of userHasMovie
   const [userHasMovie, setUserHasMovie] = useState(movie.userHasMovie);
   const { token } = useContext(AuthContext);
@@ -42,7 +44,6 @@ export default function MovieCard({
     imdbRating: movie.imdbRating,
   };
 
-
   const handleAdd = async () => {
     try {
       await addMovie(token, movieWithoutUserHasMovie);
@@ -52,12 +53,11 @@ export default function MovieCard({
     }
   };
 
-
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
         component="img"
-        height="194"
+        height="100%"
         image={movie.poster}
         alt="Paella dish"
       />
@@ -81,18 +81,25 @@ export default function MovieCard({
           }}
         >
           <StarIcon sx={{ color: "#F2911B" }} />
-          {movie.imdbRating}
+          {movie.imdbRating} IMDB
         </Typography>
       </CardContent>
-      <CardActions disableSpacing>
+      <CardActions
+        sx={{
+          justifyContent: "space-between",
+        }}
+        disableSpacing
+      >
+        <p>{movie.userRating} oioi</p>
+        {userHasMovie ? <StarRating userRating={movie.userRating} imdbID={movie.imdbID} /> : ""}
         {userHasMovie ? (
           <Button
             onClick={onClickDelete}
+            endIcon={<DeleteIcon />}
             variant="contained"
             color="error"
-            fullWidth
           >
-            Remove
+            REMOVE
           </Button>
         ) : (
           <Button
