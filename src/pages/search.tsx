@@ -23,6 +23,7 @@ type Movie = {
 };
 
 function Search() {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const moviesPlaceHolder: Movie[] = [];
 
   const [movies, setMovies] = useState<Movie[]>(moviesPlaceHolder);
@@ -53,7 +54,7 @@ function Search() {
     const subscription = search$.subscribe(setMovies);
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [moviesPlaceHolder, token]);
 
   const handleDelete = async (imdbID: string) => {
     try {
