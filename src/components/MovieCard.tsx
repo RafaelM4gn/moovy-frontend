@@ -12,10 +12,12 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import StarRating from "./StarRating";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ConfirmAlert from "./ConfirmAlert";
 
 export default function MovieCard({
   movie,
   handleDelete,
+  starRate,
 }: {
   movie: {
     imdbID: string;
@@ -26,14 +28,17 @@ export default function MovieCard({
     userRating: number | null;
   };
   handleDelete: (imdbID: string) => Promise<void>;
+  starRate: boolean;
 }) {
   //state of userHasMovie
   const [userHasMovie, setUserHasMovie] = useState(movie.userHasMovie);
   const { token } = useContext(AuthContext);
+  const [open, setOpen] = useState(false);
 
   const onClickDelete = () => {
-    handleDelete(movie.imdbID);
-    setUserHasMovie(false);
+    setOpen(true);
+    // handleDelete(movie.imdbID);
+    // setUserHasMovie(false);
   };
 
   //save movie without userHasMovie
@@ -51,6 +56,17 @@ export default function MovieCard({
     } catch (error) {
       console.error("error", error);
     }
+  };
+
+  //make a function thar make onAgreeProps to handleDelete
+  const handleAgree = () => {
+    handleDelete(movie.imdbID);
+    setUserHasMovie(false);
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -86,14 +102,19 @@ export default function MovieCard({
       </CardContent>
       <CardActions
         sx={{
+          //if space
+          display: "flex",
+
           justifyContent: "space-between",
         }}
         disableSpacing
       >
-        <p>{movie.userRating} oioi</p>
-        {userHasMovie ? <StarRating userRating={movie.userRating} imdbID={movie.imdbID} /> : ""}
+        {userHasMovie && starRate && (
+          <StarRating userRating={movie.userRating} imdbID={movie.imdbID} />
+        )}
         {userHasMovie ? (
           <Button
+            fullWidth={!starRate}
             onClick={onClickDelete}
             endIcon={<DeleteIcon />}
             variant="contained"
@@ -113,6 +134,11 @@ export default function MovieCard({
           </Button>
         )}
       </CardActions>
+      <ConfirmAlert
+        openProps={open}
+        onCloseProps={handleClose}
+        onAgreeProps={handleAgree}
+      />
     </Card>
   );
 }
