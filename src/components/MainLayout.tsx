@@ -23,21 +23,20 @@ export default function MainLayout({ children }: { children: JSX.Element }) {
             mr: 15,
           }}
         >
-
-        Moovy
+          Moovy
         </Typography>
 
         <NavLink to={`/search`}> Search </NavLink>
         <NavLink to={`/my-library`}> My Library </NavLink>
-        <NavLink to={`/login`}> Login </NavLink>
       </Toolbar>
-      <Container maxWidth="xl" sx={
-        {
+      <Container
+        maxWidth="xl"
+        sx={{
           display: "flex",
           flexDirection: "column",
-        }
-      }>
-      {children}
+        }}
+      >
+        {children}
       </Container>
     </Box>
   );

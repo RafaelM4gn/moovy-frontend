@@ -6,11 +6,13 @@ type AuthContextType = {
 };
 
 // iniciando o contexto com um objeto vazio
-export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+export const AuthContext = createContext<AuthContextType>(
+  {} as AuthContextType
+);
 
 // Provedor do contexto de autenticação
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState("No token");
+  const [token, setToken] = useState(" ");
 
   return (
     <AuthContext.Provider value={{ token, setToken }}>

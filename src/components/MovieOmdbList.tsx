@@ -4,6 +4,7 @@ import MovieCard from "./MovieCard";
 export default function MovieOmdbList({
   movies,
   handleDelete,
+  starRate,
 }: {
   movies: {
     imdbID: string;
@@ -14,20 +15,25 @@ export default function MovieOmdbList({
     userHasMovie: boolean;
   }[];
   handleDelete: (imdbID: string) => Promise<void>;
+  starRate: boolean;
 }) {
   return (
     <Grid
       mt={2}
       container
       rowSpacing={2}
-      columnSpacing={0}
+      columnSpacing={1}
       sx={{
         overflowY: "hidden",
       }}
     >
       {movies.map((movie) => (
         <Grid item xs={4} key={movie.imdbID}>
-          <MovieCard movie={movie} handleDelete={handleDelete}/>
+          <MovieCard
+            movie={movie}
+            starRate={starRate}
+            handleDelete={handleDelete}
+          />
         </Grid>
       ))}
     </Grid>

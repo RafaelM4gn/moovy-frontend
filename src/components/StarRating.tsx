@@ -45,7 +45,7 @@ export default function StarRating({
         name="simple-controlled"
         value={value}
         onChange={(_event, newValue) => {
-            handleReview(newValue);
+          handleReview(newValue);
         }}
       />
     </Box>
