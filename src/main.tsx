@@ -17,7 +17,7 @@ const router = createBrowserRouter([
     element: <MyLibrary />,
   },
   {
-    path: "/login",
+    path: "/",
     element: <Login />,
   },
 ]);
