@@ -3,10 +3,10 @@ import { Alert } from "@mui/material";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useState } from "react";
-import { login } from "../api/api";
+import { createUser } from "../api/api";
 import { Link, useNavigate } from "react-router-dom";
 
-function Login() {
+export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [alertOpen, setAlertOpen] = useState(false);
@@ -15,23 +15,20 @@ function Login() {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleLogin = async (e: {
+  const handleRegister = async (e: {
     stopPropagation: () => void;
     preventDefault: () => void;
   }) => {
     try {
       e.stopPropagation();
       e.preventDefault();
-      const response = await login(username, password);
-      if (authContext) {
-        authContext.setToken(response);
-      }
-      navigate("/search");
-      //print token from context
+      await createUser(username, password);
+      navigate("/");
     } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage("Invalid username or password");
-      console.error("error", error);
+      if (error instanceof Error) {
+        setAlertOpen(true);
+        setAlertMessage(error.message);
+      }
     }
   };
 
@@ -64,7 +61,7 @@ function Login() {
           {alertMessage}
         </Alert>
       )}
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleRegister}>
         <h1
           style={{
             textAlign: "center",
@@ -82,7 +79,7 @@ function Login() {
             textAlign: "center",
           }}
         >
-          login
+          Register
         </h1>
         <TextField
           id="outlined-basic"
@@ -118,14 +115,12 @@ function Login() {
           }}
           fullWidth
         >
-          Login
+          Register
         </Button>
       </form>
-      <Link to="/register" style={{ textDecoration: "none", marginTop: "8px" }}>
-        Create your Account
+      <Link to="/" style={{ textDecoration: "none", marginTop: "8px" }}>
+          Return to Login
       </Link>
     </Box>
   );
 }
-
-export default Login;

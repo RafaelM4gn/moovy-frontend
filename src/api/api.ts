@@ -83,3 +83,18 @@ export async function validateToken(token: string) {
   });
   return response.data;
 }
+
+export async function createUser(username: string, password: string) {
+  try {
+    const response = await axios.post("/users/", {
+      username, password
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response && error.response.status === 409) {
+      throw new Error('User already exists');
+    }
+    throw error;
+  }
+}
+
