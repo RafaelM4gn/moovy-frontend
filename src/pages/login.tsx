@@ -1,22 +1,36 @@
 import { Box, Button, TextField } from "@mui/material";
+import { Alert } from "@mui/material";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import MainLayout from "../components/MainLayout";
 import { useState } from "react";
 import { login } from "../api/api";
+import { useNavigate } from "react-router-dom";
+
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const authContext = useContext(AuthContext);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
-  const handleLogin = async () => {
+  const authContext = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: {
+    stopPropagation: () => void;
+    preventDefault: () => void;
+  }) => {
     try {
+      e.stopPropagation();
+      e.preventDefault();
       const response = await login(username, password);
       if (authContext) {
         authContext.setToken(response);
       }
+      navigate("/search");
       //print token from context
     } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Invalid username or password");
       console.error("error", error);
     }
   };
@@ -26,19 +40,50 @@ function Login() {
   }, [authContext.token]);
 
   return (
-    <MainLayout>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "50%",
-          height: "40vh",
-          margin: "auto auto",
-        }}
-      >
-        <h1> Login </h1>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "50%",
+        height: "100%",
+        margin: "auto auto",
+      }}
+    >
+      {alertOpen && (
+        <Alert
+          severity="warning"
+          sx={{
+            width: "50%",
+          }}
+          onClose={() => {
+            setAlertOpen(false);
+          }}
+        >
+          {alertMessage}
+        </Alert>
+      )}
+      <form onSubmit={handleLogin}>
+        <h1
+          style={{
+            textAlign: "center",
+            color: "#F2911B",
+            fontSize: "60px",
+            fontWeight: 700,
+            fontStyle: "normal",
+            lineHeight: "24px",
+          }}
+        >
+          Moovy
+        </h1>
+        <h1
+          style={{
+            textAlign: "center",
+          }}
+        >
+          login
+        </h1>
         <TextField
           id="outlined-basic"
           label="Username"
@@ -62,8 +107,8 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <Button
+          type="submit"
           variant="contained"
-          onClick={handleLogin}
           sx={{
             width: "100%",
             backgroundColor: "#F2911B",
@@ -75,9 +120,8 @@ function Login() {
         >
           Login
         </Button>
-        {authContext.token && <p>Token: {authContext.token}</p>}
-      </Box>
-    </MainLayout>
+      </form>
+    </Box>
   );
 }
 

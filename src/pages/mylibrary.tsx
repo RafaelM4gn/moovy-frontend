@@ -3,6 +3,7 @@ import MainLayout from "../components/MainLayout";
 import { AuthContext } from "../contexts/AuthContext";
 import { getMovies, removeMovie } from "../api/api";
 import MovieOmdbList from "../components/MovieOmdbList";
+import PrivatePage from "../components/PrivatePage";
 
 function MyLibrary() {
   //get token updated token from context
@@ -15,6 +16,7 @@ function MyLibrary() {
       title: string;
       poster: string;
       imdbRating: number;
+      userRating: number | null;
       userHasMovie: boolean;
     }[]
   >([]);
@@ -45,13 +47,18 @@ function MyLibrary() {
   console.log("myLibrary", myLibrary);
 
   return (
-    <MainLayout>
-      <>
-        <h1> My Library </h1>
-        {token && <p>Token: {token}</p>}
-        <MovieOmdbList movies={myLibrary}  handleDelete={handleDelete} />
-      </>
-    </MainLayout>
+    <PrivatePage>
+      <MainLayout>
+        <>
+          <h1> My Library </h1>
+          <MovieOmdbList
+            movies={myLibrary}
+            starRate={true}
+            handleDelete={handleDelete}
+          />
+        </>
+      </MainLayout>
+    </PrivatePage>
   );
 }
 

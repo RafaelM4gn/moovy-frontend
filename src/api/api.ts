@@ -54,7 +54,7 @@ export async function addMovie(
       Authorization: `Bearer ${token}`,
     },
   });
-  
+
   return response.data;
 }
 
@@ -65,11 +65,21 @@ export async function reviewMovie(
 ) {
   const response = await axios.put(
     `/movies/review?imdbID=${imdbID}&review=${review}`,
-    null,{
+    null,
+    {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     }
   );
+  return response.data;
+}
+
+export async function validateToken(token: string) {
+  const response = await axios.get("/auth/validate", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 }
